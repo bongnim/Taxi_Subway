@@ -53,7 +53,6 @@ public class ResultActivity extends AppCompatActivity {
         tmapview.setZoomLevel(12);
 
         tmapview.setMapType(TMapView.MAPTYPE_STANDARD);
-        tmapview.setCompassMode(true);
         tmapview.setTrackingMode(true);
         relativeLayout.addView(tmapview);
         setContentView(relativeLayout);
