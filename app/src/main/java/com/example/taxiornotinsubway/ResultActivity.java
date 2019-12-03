@@ -14,26 +14,44 @@ import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 
+import org.w3c.dom.Document;
+
+import java.util.Date;
+import java.util.HashMap;
+
 public class ResultActivity extends AppCompatActivity {
     TMapView tmapview;
     TMapData tMapData;
-    TMapPoint tMapPointStart = new TMapPoint(37.582191, 127.001915); // 혜화역
-    TMapPoint tMapPointEnd = new TMapPoint(37.500628, 127.036392); // 역삼역
+    TMapPoint tMapPointStart;
+    TMapPoint tMapPointEnd;
     PathAsync pathAsync;
     TMapPolyLine polyLine;
     @Override 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.result_taxi);
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+
+
+           // Log.d("inside", String.valueOf(bundle.getDoubleArray("some")[0]));
+            tMapPointStart = new TMapPoint(bundle.getDoubleArray("some")[0], bundle.getDoubleArray("some")[1]); // 혜화역
+            tMapPointEnd = new TMapPoint( bundle.getDoubleArray("some")[2],bundle.getDoubleArray("some")[3]); // 역삼역
+
+
+        }
+
+
         //map viewer
         RelativeLayout relativeLayout = new RelativeLayout(this);
 
         tmapview = new TMapView(this);
         tMapData = new TMapData();
         tmapview.setSKTMapApiKey("0f31e295-9ada-43b5-9292-5133678f2a00");
+        tmapview.setCenterPoint((tMapPointStart.getLongitude()+tMapPointEnd.getLongitude())/2,(tMapPointStart.getLatitude()+tMapPointEnd.getLatitude())/2, true);
         tmapview.setLanguage(TMapView.LANGUAGE_KOREAN);
-        tmapview.setIconVisibility(true);
         tmapview.setZoomLevel(12);
+
         tmapview.setMapType(TMapView.MAPTYPE_STANDARD);
         tmapview.setCompassMode(true);
         tmapview.setTrackingMode(true);
@@ -45,15 +63,9 @@ public class ResultActivity extends AppCompatActivity {
         pathAsync.execute(polyLine);
 
 
+
         
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
-            if (bundle.getString("some") != null){
-                Toast.makeText(getApplicationContext(),
-                        "data:" +bundle.getString("some"),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
+
     }
     class PathAsync extends AsyncTask<TMapPolyLine, Void, TMapPolyLine> {
         @Override
@@ -63,6 +75,8 @@ public class ResultActivity extends AppCompatActivity {
                 tMapPolyLine = new TMapData().findPathDataWithType(TMapData.TMapPathType.CAR_PATH, tMapPointStart, tMapPointEnd);
                 tMapPolyLine.setLineColor(Color.BLUE);
                 tMapPolyLine.setLineWidth(3);
+                double Distance = tMapPolyLine.getDistance();
+                Log.i("MyTag", "거리:"+Distance);
 
 
             }catch(Exception e) {

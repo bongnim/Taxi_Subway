@@ -54,7 +54,8 @@ public class Fragment1 extends Fragment {
             @Override
             public void onClick(View v){
                 Intent in = new Intent(getActivity(), ResultActivity.class);
-                in.putExtra("some", "somedata");
+                double[] latlong ={37.582191, 127.001915, 37.500628,127.036392};
+                in.putExtra("some", latlong);
                 startActivity(in);
             }
         });
