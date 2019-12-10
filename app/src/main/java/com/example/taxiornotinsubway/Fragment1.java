@@ -38,7 +38,7 @@ public class Fragment1 extends Fragment {
     public Context context;
     public JSONObject jsonObject;
     public String subwayTravelTime = "0";
-    public String exchangeStation;
+    public String exchangeStation = "";
     public String taxiTravelTime = "0";
     //Handler
     Handler handler = new Handler(){
@@ -89,7 +89,7 @@ public class Fragment1 extends Fragment {
                 if (api == API.SUBWAY_PATH) {
                     subwayTravelTime = odsayData.getJson().getJSONObject("result").getString("globalTravelTime");
                     exchangeStation = odsayData.getJson().getJSONObject("result").getJSONObject("exChangeInfoSet").getJSONArray("exChangeInfo").getJSONObject(0).getString("exName");
-                    Log.d("Travel Time : %s", subwayTravelTime);
+                    Log.d("Travel Time : %s", exchangeStation);
                 }
             }catch (JSONException e) {
                 e.printStackTrace();
