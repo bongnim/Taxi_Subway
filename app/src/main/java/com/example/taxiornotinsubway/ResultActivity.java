@@ -32,10 +32,9 @@ public class ResultActivity extends AppCompatActivity {
         tMapData = new TMapData();
         tmapview.setSKTMapApiKey("0f31e295-9ada-43b5-9292-5133678f2a00");
         tmapview.setLanguage(TMapView.LANGUAGE_KOREAN);
-        tmapview.setIconVisibility(true);
         tmapview.setZoomLevel(12);
         tmapview.setMapType(TMapView.MAPTYPE_STANDARD);
-        tmapview.setCompassMode(true);
+        tmapview.setCenterPoint((tMapPointStart.getLongitude()+tMapPointEnd.getLongitude())/2,(tMapPointStart.getLatitude()+tMapPointEnd.getLatitude())/2, true);
         tmapview.setTrackingMode(true);
         relativeLayout.addView(tmapview);
         setContentView(relativeLayout);
@@ -45,14 +44,12 @@ public class ResultActivity extends AppCompatActivity {
         pathAsync.execute(polyLine);
 
 
-        
+
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
-            if (bundle.getString("some") != null){
-                Toast.makeText(getApplicationContext(),
-                        "data:" +bundle.getString("some"),
-                        Toast.LENGTH_SHORT).show();
-            }
+            // Log.d("inside", String.valueOf(bundle.getDoubleArray("some")[0]));
+            tMapPointStart = new TMapPoint(bundle.getDoubleArray("some")[0], bundle.getDoubleArray("some")[1]); // 혜화역
+            tMapPointEnd = new TMapPoint( bundle.getDoubleArray("some")[2],bundle.getDoubleArray("some")[3]); // 역삼역
         }
     }
     class PathAsync extends AsyncTask<TMapPolyLine, Void, TMapPolyLine> {
