@@ -23,13 +23,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
     private List<Note> notesList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView note;
+        public TextView start;
+        public TextView end;
         public TextView dot;
         public TextView timestamp;
 
         public MyViewHolder(View view) {
             super(view);
-            note = view.findViewById(R.id.note);
+            start = view.findViewById(R.id.start);
+            end = view.findViewById(R.id.end);
             dot = view.findViewById(R.id.dot);
             timestamp = view.findViewById(R.id.timestamp);
         }
@@ -53,7 +55,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Note note = notesList.get(position);
 
-        holder.note.setText(note.getNote());
+        holder.start.setText(note.getStart());
+        holder.end.setText(note.getEnd());
 
         // Displaying dot from HTML character code
         holder.dot.setText(Html.fromHtml("&#8226;"));
@@ -67,16 +70,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         return notesList.size();
     }
 
-    /**
-     * Formatting timestamp to `MMM d` format
-     * Input: 2018-02-21 00:15:42
-     * Output: Feb 21
-     */
     private String formatDate(String dateStr) {
         try {
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = fmt.parse(dateStr);
-            SimpleDateFormat fmtOut = new SimpleDateFormat("MMM d");
+            SimpleDateFormat fmtOut = new SimpleDateFormat("yyyy.mm.dd   HH:mm");
             return fmtOut.format(date);
         } catch (ParseException e) {
 
