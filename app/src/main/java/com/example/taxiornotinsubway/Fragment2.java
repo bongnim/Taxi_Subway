@@ -39,7 +39,6 @@ public class Fragment2 extends Fragment {
         noNotesView = view.findViewById(R.id.empty_notes_view);
 
         db = new DatabaseHelper(getActivity());
-
         notesList.addAll(db.getAllHistory());
 
         mAdapter = new NotesAdapter(getActivity(), notesList);
@@ -48,28 +47,7 @@ public class Fragment2 extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        toggleEmptyNotes();
         return view;
     }
 
-    private void deleteNote(int position) {
-        // deleting the note from db
-        db.deleteNote(notesList.get(position));
-
-        // removing the note from the list
-        notesList.remove(position);
-        mAdapter.notifyItemRemoved(position);
-
-        toggleEmptyNotes();
-    }
-
-    private void toggleEmptyNotes() {
-        // you can check notesList.size() > 0
-
-        if (db.getNotesCount() > 0) {
-            noNotesView.setVisibility(View.GONE);
-        } else {
-            noNotesView.setVisibility(View.VISIBLE);
-        }
-    }
 }

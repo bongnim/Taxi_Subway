@@ -52,16 +52,10 @@ public class Fragment3 extends Fragment {
         return view;
     }
 
-    private void deleteNote(int position) {
-        // deleting the note from db
-        db.deleteNote(notesList.get(position));
+    // result 버튼 클릭시 호출
+    // 새 노트 생성 >> type 은 무조건 history...
 
-        // removing the note from the list
-        notesList.remove(position);
-        mAdapter.notifyItemRemoved(position);
 
-        toggleEmptyNotes();
-    }
 
     private void toggleEmptyNotes() {
         // you can check notesList.size() > 0
