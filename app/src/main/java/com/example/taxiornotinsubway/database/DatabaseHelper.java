@@ -188,8 +188,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return notes;
     }
-    public int getNotesCount() {
-        String countQuery = "SELECT  * FROM " + Note.TABLE_NAME;
+    public int getNotesCountB() {
+        String countQuery ="SELECT  * FROM " + Note.TABLE_NAME + " WHERE type='bookmark'"  ;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+
+
+        // return count
+        return count;
+    }
+    public int getNotesCountH() {
+        String countQuery ="SELECT  * FROM " + Note.TABLE_NAME + " WHERE type='history'"  ;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
 

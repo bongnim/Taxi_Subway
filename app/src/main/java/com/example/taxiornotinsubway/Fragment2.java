@@ -1,5 +1,6 @@
 package com.example.taxiornotinsubway;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class Fragment2 extends Fragment {
     private RecyclerView recyclerView;
     private TextView noNotesView;
     private DatabaseHelper db;
+    private TextView test_btn;
 
     @Nullable
     @Override
@@ -34,39 +36,50 @@ public class Fragment2 extends Fragment {
             @NonNull LayoutInflater inflater,
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment2, container, false);
-        recyclerView = view.findViewById(R.id.recycler_view);
-        noNotesView = view.findViewById(R.id.empty_notes_view);
+        View view =  inflater.inflate(R.layout.fragment2 , container, false);
+        recyclerView = view.findViewById(R.id.recycler_view2);
+        noNotesView = view.findViewById(R.id.empty_notes_view2);
+        test_btn = view.findViewById(R.id.test_btn);
 
+        Log.d("skku","fragment2 create");
         db = new DatabaseHelper(getActivity());
-
+        notesList.clear();
         notesList.addAll(db.getAllHistory());
+
+        test_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                long id = db.insertNote("history","혜화","강남","37.582191", "127.001915", "37.500628","127.036392");
+                Note n = db.getNote(id);
+
+                if (n != null) {
+                    // adding new note to array list at 0 position
+                    notesList.add(0, n);
+                }
+                toggleEmptyNotes();
+                mAdapter.notifyDataSetChanged();
+
+
+            }
+        });
+
+
 
         mAdapter = new NotesAdapter(getActivity(), notesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-
         toggleEmptyNotes();
+
         return view;
     }
 
-    private void deleteNote(int position) {
-        // deleting the note from db
-        db.deleteNote(notesList.get(position));
-
-        // removing the note from the list
-        notesList.remove(position);
-        mAdapter.notifyItemRemoved(position);
-
-        toggleEmptyNotes();
-    }
 
     private void toggleEmptyNotes() {
-        // you can check notesList.size() > 0
-
-        if (db.getNotesCount() > 0) {
+        Log.d("skku","toggle History column: "+db.getNotesCountH());
+        if (db.getNotesCountH() > 0) {
             noNotesView.setVisibility(View.GONE);
         } else {
             noNotesView.setVisibility(View.VISIBLE);
