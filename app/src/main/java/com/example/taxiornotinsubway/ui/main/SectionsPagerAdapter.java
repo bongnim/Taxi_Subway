@@ -1,6 +1,7 @@
 package com.example.taxiornotinsubway.ui.main;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -36,22 +37,21 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // 指定されたページのフラグメントをインスタンス化するためにgetItemが呼び出し
         //return PlaceholderFragment.newInstance(position + 1);
+        Log.d("skku","position"+position);
 
-        Fragment fragment = null;
         switch (position){
             case 0:
-                fragment = new Fragment1();
-                break;
+                Fragment fragment1 = new Fragment1();
+                return fragment1;
             case 1:
-                fragment = new Fragment2();
-                break;
+                Fragment fragment2 = new Fragment2();
+                return fragment2;
             case 2:
-                fragment = new Fragment3();
+                Fragment fragment3 = new Fragment3();
+                return fragment3;
             default:
-                break;
+                return null;
         }
-        return fragment;
-
     }
     @Nullable
     @Override

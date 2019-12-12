@@ -1,5 +1,6 @@
 package com.example.taxiornotinsubway;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +36,13 @@ public class Fragment3 extends Fragment {
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment3, container, false);
-        recyclerView = view.findViewById(R.id.recycler_view);
-        noNotesView = view.findViewById(R.id.empty_notes_view);
+        recyclerView = view.findViewById(R.id.recycler_view3);
+        noNotesView = view.findViewById(R.id.empty_notes_view3);
+
+        Log.d("skku","fragment3 create");
 
         db = new DatabaseHelper(getActivity());
-
+        notesList.clear();
         notesList.addAll(db.getAllBookMark());
 
         mAdapter = new NotesAdapter(getActivity(), notesList);
@@ -52,15 +55,9 @@ public class Fragment3 extends Fragment {
         return view;
     }
 
-    // result 버튼 클릭시 호출
-    // 새 노트 생성 >> type 은 무조건 history...
-
-
-
     private void toggleEmptyNotes() {
-        // you can check notesList.size() > 0
-
-        if (db.getNotesCount() > 0) {
+        Log.d("skku","toggle Bookmark column"+db.getNotesCountB());
+        if (db.getNotesCountB() > 0) {
             noNotesView.setVisibility(View.GONE);
         } else {
             noNotesView.setVisibility(View.VISIBLE);

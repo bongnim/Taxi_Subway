@@ -66,7 +66,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         final Note note = notesList.get(position);
         holder.start.setText(note.getStart());
         holder.end.setText(note.getEnd());
-        // Formatting and displaying timestamp
         holder.timestamp.setText(formatDate(note.getTimestamp()));
 
 
@@ -78,11 +77,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
                 Toast.makeText(context, "선택 ID start : " + note.getId(), Toast.LENGTH_LONG).show();
                 note.setType("bookmark");
                 db.updateNote(note);
+//                notesList.set(position,note);
                 notesList.remove(position);
-                notesList.set(position,note);
 //                notifyItemChanged(position);
-
                 notifyDataSetChanged();
+
             }
         });
 
@@ -108,7 +107,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
                 Toast.makeText(context, "선택 ID delete: " + note.getId(), Toast.LENGTH_LONG).show();
                 db.deleteNote(note);
                 notesList.remove(note);
-                notifyItemChanged(position);
+                notifyDataSetChanged();
             }
         });
 
@@ -121,11 +120,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         if (n != null) {
             // adding new note to array list at 0 position
             notesList.add(0, n);
-            notifyItemChanged(0);
+            notifyDataSetChanged();
 
             // refreshing the list
-//            mAdapter.notifyDataSetChanged();
-//            toggleEmptyNotes();
+            // mAdapter.notifyDataSetChanged();
+            //  toggleEmptyNotes();
         }
     }
 
