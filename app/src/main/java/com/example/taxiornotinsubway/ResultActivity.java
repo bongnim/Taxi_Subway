@@ -3,6 +3,7 @@ package com.example.taxiornotinsubway;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -34,7 +35,6 @@ public class ResultActivity extends AppCompatActivity {
         if(bundle != null){
 
 
-           // Log.d("inside", String.valueOf(bundle.getDoubleArray("some")[0]));
             tMapPointStart = new TMapPoint(bundle.getDoubleArray("some")[0], bundle.getDoubleArray("some")[1]); // 혜화역
             tMapPointEnd = new TMapPoint( bundle.getDoubleArray("some")[2],bundle.getDoubleArray("some")[3]); // 역삼역
 
