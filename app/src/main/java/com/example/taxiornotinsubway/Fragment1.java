@@ -71,12 +71,14 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
     }
     private Spinner spinner2;
     //지하철 노선 시간 확인
+
+
     public void PathSeeking() {
         odsayService = ODsayService.init(getActivity(), "ohyAzciqIm641X57gUSvS8GNcWZscObNioWn+1HlQHE");
         odsayService.setReadTimeout(5000);
         odsayService.setConnectionTimeout(5000);
         //SID는 DB에서 맞는 지하철역 정보를 받아와 DB에서 ID를 받아올 것
-        odsayService.requestSubwayPath("1000", "420", "221", "1", onResultCallbackListener);
+        odsayService.requestSubwayPath("1000", "221", "420", "1", onResultCallbackListener);
         //stationName에 조회할 View를 넣어야함
     }
 

@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.taxiornotinsubway.database.DatabaseHelper;
@@ -29,11 +31,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ResultActivity2 extends AppCompatActivity {
-    private NotesAdapter mAdapter;
-    private List<Note> notesList = new ArrayList<>();
+    private SubwayResultAdapter mAdapter;
     private RecyclerView recyclerView;
-    private TextView noNotesView;
-    private DatabaseHelper db;
 
 
     @Override
@@ -43,7 +42,21 @@ public class ResultActivity2 extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         Data data = (Data)bundle.getSerializable("some");
         Log.e("inside", String.valueOf(data.getExchangeStations()[0]));
+        Log.e("inside", String.valueOf(data.getExchangeStations()[1]));
 
+        ArrayList<String> ex = new ArrayList<>();
+        ex.add(data.getStartName());
+        for (String each : data.getExchangeStations()){
+            ex.add(each);
+        }
+        ex.add(data.getEndName());
+        recyclerView =  findViewById(R.id.recycler_view_result);
+
+        mAdapter = new SubwayResultAdapter(this, ex);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
     }
 
