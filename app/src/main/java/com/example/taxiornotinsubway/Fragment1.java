@@ -35,6 +35,7 @@ import java.nio.file.Path;
 
 public class Fragment1 extends Fragment implements FragmentLifecycle{
     public ODsayService odsayService;
+    String[] exchangeList;
     public Context context;
     public JSONObject jsonObject;
     public String subwayTravelTime = "0";
@@ -88,8 +89,15 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
                 // API Value 는 API 호출 메소드 명을 따라갑니다.
                 if (api == API.SUBWAY_PATH) {
                     subwayTravelTime = odsayData.getJson().getJSONObject("result").getString("globalTravelTime");
+                    JSONArray exchangeStations = odsayData.getJson().getJSONObject("result").getJSONObject("exChangeInfoSet").getJSONArray("exChangeInfo");
                     exchangeStation = odsayData.getJson().getJSONObject("result").getJSONObject("exChangeInfoSet").getJSONArray("exChangeInfo").getJSONObject(0).getString("exName");
-                    Log.d("Travel Time : %s", exchangeStation);
+                    exchangeList = new String[exchangeStations.length()];
+                    for (int i=0; i<exchangeStations.length(); i++){
+                        Log.d("Exchange :", exchangeStations.getJSONObject(i).getString("exName"));
+                        exchangeList[i] = exchangeStations.getJSONObject(i).getString("exName");
+                    }
+
+
                 }
             }catch (JSONException e) {
                 e.printStackTrace();
@@ -135,15 +143,17 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
                 HttpThread httpThread = new HttpThread("https://apis.openapi.sk.com/tmap/routes?version=1&format=json&appKey=0f31e295-9ada-43b5-9292-5133678f2a00&startX=126.9850380932383&startY=37.566567545861645&endX=127.10331814639885&endY=37.403049076341794&totalValue=2");
                 httpThread.start();
                 Log.d("taxi and subway","Taxi Time : "+taxiTravelTime + " Subway Time: " + subwayTravelTime);
-                if(Integer.parseInt(subwayTravelTime) < Integer.parseInt(taxiTravelTime)){
+                //if(Integer.parseInt(subwayTravelTime) < Integer.parseInt(taxiTravelTime)){
+                //임시
+                if(false){
                     Intent in = new Intent(getActivity(), ResultActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("some",new Data(taxiTravelTime, subwayTravelTime, 37.582191,127.001915,37.500628,127.036392));
                     in.putExtras(bundle);
                     startActivity(in);
                 }else{
-                    Intent in = new Intent(getActivity(), ResultActivity.class); //ResultActivity를 2개로 나눠서
-                    in.putExtra("some", new Data(taxiTravelTime, subwayTravelTime, 37.582191,127.001915,37.500628,127.036392));
+                    Intent in = new Intent(getActivity(), ResultActivity2.class); //ResultActivity를 2개로 나눠서
+                    in.putExtra("some", new Data(taxiTravelTime, subwayTravelTime, "역삼","혜화", exchangeList));
                     startActivity(in);
                 }
             }
