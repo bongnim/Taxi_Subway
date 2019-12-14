@@ -19,14 +19,19 @@ import com.skt.Tmap.TMapView;
 public class ResultActivity extends AppCompatActivity {
     TMapView tmapview;
     TMapData tMapData;
-    TMapPoint tMapPointStart = new TMapPoint(37.582191, 127.001915); // 혜화역
-    TMapPoint tMapPointEnd = new TMapPoint(37.500628, 127.036392); // 역삼역
+    TMapPoint tMapPointStart;
+    TMapPoint tMapPointEnd;
     PathAsync pathAsync;
     TMapPolyLine polyLine;
     @Override 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.result_taxi);
+        Bundle bundle = getIntent().getExtras();
+        Data data = (Data)bundle.getSerializable("some");
+        Log.e("inside", String.valueOf(data.getStartName()));
+        tMapPointStart = new TMapPoint(data.getStartX(), data.getEndX()); // 혜화역
+        tMapPointEnd = new TMapPoint(data.getStartY(),data.getEndY()); // 역삼역
         //map viewer
         RelativeLayout relativeLayout = new RelativeLayout(this);
 
@@ -45,13 +50,7 @@ public class ResultActivity extends AppCompatActivity {
         pathAsync = new PathAsync();
         pathAsync.execute(polyLine);
 ;
-        Bundle bundle = getIntent().getExtras();
-        Data data = (Data)bundle.getSerializable("some");
-        if(data != null){
-            // Log.d("inside", String.valueOf(bundle.getDoubleArray("some")[0]));
-            tMapPointStart = new TMapPoint(data.getStartX(), data.getEndX()); // 혜화역
-            tMapPointEnd = new TMapPoint( data.getStartY(),data.getEndY()); // 역삼역
-        }
+
     }
     class PathAsync extends AsyncTask<TMapPolyLine, Void, TMapPolyLine> {
         @Override
