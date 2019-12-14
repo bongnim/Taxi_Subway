@@ -42,7 +42,7 @@ public class ResultActivity2 extends AppCompatActivity {
         setContentView(R.layout.result_subway);
         Bundle bundle = getIntent().getExtras();
         Data data = (Data)bundle.getSerializable("some");
-        Log.e("inside", String.valueOf(data.getExchangeStations().[0]));
+        Log.e("inside", String.valueOf(data.getExchangeStations()[0]));
 
 
     }
