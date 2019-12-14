@@ -40,10 +40,7 @@ public class Fragment3 extends Fragment implements FragmentLifecycle{
         recyclerView = view.findViewById(R.id.recycler_view3);
         noNotesView = view.findViewById(R.id.empty_notes_view3);
 
-        Log.d("skku","fragment3 create");
-
         db = new DatabaseHelper(getActivity());
-        notesList.clear();
         notesList.addAll(db.getAllBookMark());
 
         mAdapter = new NotesAdapter(getActivity(), notesList);
@@ -51,12 +48,26 @@ public class Fragment3 extends Fragment implements FragmentLifecycle{
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-
         toggleEmptyNotes();
         return view;
     }
 
-    private void toggleEmptyNotes() {
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.d("skku", "Fragment3 is visible.");
+            notesList.clear();
+            notesList.addAll(db.getAllBookMark());
+            mAdapter.notifyDataSetChanged();
+
+            toggleEmptyNotes();
+        }
+        return;
+
+    }
+
+    public void toggleEmptyNotes() {
         Log.d("skku","toggle Bookmark column"+db.getNotesCountB());
         if (db.getNotesCountB() > 0) {
             noNotesView.setVisibility(View.GONE);

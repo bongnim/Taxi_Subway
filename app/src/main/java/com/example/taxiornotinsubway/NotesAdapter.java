@@ -4,6 +4,7 @@ package com.example.taxiornotinsubway;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.taxiornotinsubway.database.DatabaseHelper;
 import com.example.taxiornotinsubway.database.model.Note;
+import com.example.taxiornotinsubway.ui.main.SectionsPagerAdapter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +30,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
     private Context context;
     private List<Note> notesList;
     private DatabaseHelper db;
+    private Fragment2 f2;
+    private Fragment3 f3;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView start;
@@ -69,22 +75,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         holder.timestamp.setText(formatDate(note.getTimestamp()));
 
 
-
-//        add event listener
+        // 북마크 추가
         holder.ivStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(context, "선택 ID start : " + note.getId(), Toast.LENGTH_LONG).show();
                 note.setType("bookmark");
                 db.updateNote(note);
-//                notesList.set(position,note);
                 notesList.remove(position);
-//                notifyItemChanged(position);
                 notifyDataSetChanged();
-
             }
         });
 
+        // 검색
         holder.ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,6 +104,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
             }
         });
 
+        // 삭제
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,17 +122,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         Note n = db.getNote(id);
 
         if (n != null) {
-            // adding new note to array list at 0 position
             notesList.add(0, n);
             notifyDataSetChanged();
-
-            // refreshing the list
-            // mAdapter.notifyDataSetChanged();
-            //  toggleEmptyNotes();
         }
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -144,7 +141,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         } catch (ParseException e) {
 
         }
-
         return "";
     }
 }
