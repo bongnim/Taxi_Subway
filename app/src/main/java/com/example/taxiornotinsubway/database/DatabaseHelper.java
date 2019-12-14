@@ -28,7 +28,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -40,19 +39,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + Note.TABLE_NAME);
-
-        // Create tables again
         onCreate(db);
     }
 
     public long insertNote(String type, String start, String end, String start_x, String start_y, String end_x, String end_y) {
-        // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
-
         values.put(Note.COLUMN_TYPE, type);
         values.put(Note.COLUMN_START,start);
         values.put(Note.COLUMN_END,end);
@@ -61,29 +54,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Note.COLUMN_END_X, end_x);
         values.put(Note.COLUMN_END_Y, end_y);
 
-        // insert row
         long id = db.insert(Note.TABLE_NAME, null, values);
-
-        // close db connection
         db.close();
-
-        // return newly inserted row id
         return id;
     }
 
     public Note getNote(long id) {
-        // get readable database as we are not inserting anything
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(Note.TABLE_NAME,
                 new String[]{Note.COLUMN_ID, Note.COLUMN_TYPE,Note.COLUMN_START,Note.COLUMN_END,Note.COLUMN_START_X,Note.COLUMN_START_Y,Note.COLUMN_END_X,Note.COLUMN_END_Y, Note.COLUMN_TIMESTAMP},
                 Note.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
-
         if (cursor != null)
             cursor.moveToFirst();
 
-        // prepare note object
         Note note = new Note(
                 cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ID)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_TYPE)),
@@ -94,42 +79,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_END_X)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_END_Y)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_TIMESTAMP)));
-
-        // close the db connection
         cursor.close();
 
         return note;
     }
 
-//    public List<Note> getAllNotes() {
-//        List<Note> notes = new ArrayList<>();
-//
-//        // Select All Query
-//        String selectQuery = "SELECT  * FROM " + Note.TABLE_NAME + " ORDER BY " +
-//                Note.COLUMN_TIMESTAMP + " DESC";
-//
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery(selectQuery, null);
-//
-//        // looping through all rows and adding to list
-//        if (cursor.moveToFirst()) {
-//            do {
-//                Note note = new Note();
-//                note.setId(cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ID)));
-//                note.setNote(cursor.getString(cursor.getColumnIndex(Note.COLUMN_NOTE)));
-//                note.setTimestamp(cursor.getString(cursor.getColumnIndex(Note.COLUMN_TIMESTAMP)));
-//
-//                notes.add(note);
-//            } while (cursor.moveToNext());
-//        }
-//
-//        // close db connection
-//        db.close();
-//
-//        // return notes list
-//        return notes;
-//    }
-    //    history
+
+    //  history 타입 모두 가져오기
     public List<Note> getAllHistory(){
         List<Note> notes = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + Note.TABLE_NAME + " WHERE type='history'" + " ORDER BY " +
@@ -138,7 +94,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 Note note = new Note();
@@ -159,7 +114,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
      return notes;
     }
-//    bookmark
+
+    //  bookmark 타입 모두 가져오기
     public List<Note> getAllBookMark(){
         List<Note> notes = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + Note.TABLE_NAME + " WHERE type='bookmark'" + " ORDER BY " +
@@ -168,7 +124,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 Note note = new Note();
@@ -188,6 +143,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return notes;
     }
+
+
+    // history 타입 노트 카운트
+    public int getNotesCountH() {
+        String countQuery ="SELECT  * FROM " + Note.TABLE_NAME + " WHERE type='history'"  ;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
+    // bookmark 타입 노트 카운트
     public int getNotesCountB() {
         String countQuery ="SELECT  * FROM " + Note.TABLE_NAME + " WHERE type='bookmark'"  ;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -196,26 +165,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int count = cursor.getCount();
         cursor.close();
 
-
-        // return count
-        return count;
-    }
-    public int getNotesCountH() {
-        String countQuery ="SELECT  * FROM " + Note.TABLE_NAME + " WHERE type='history'"  ;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-
-        int count = cursor.getCount();
-        cursor.close();
-
-
-        // return count
         return count;
     }
 
+
+    //노트 업뎃
     public int updateNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(Note.COLUMN_TYPE, note.getType());
         values.put(Note.COLUMN_START,note.getStart());
@@ -224,12 +180,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Note.COLUMN_START_Y,note.getStart_y());
         values.put(Note.COLUMN_END_X, note.getEnd_x());
         values.put(Note.COLUMN_END_Y, note.getEnd_y());
-
         // updating row
         return db.update(Note.TABLE_NAME, values, Note.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(note.getId())});
     }
 
+    // 노트 삭제
     public void deleteNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(Note.TABLE_NAME, Note.COLUMN_ID + " = ?",

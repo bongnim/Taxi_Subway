@@ -26,7 +26,7 @@ public class Fragment2 extends Fragment {
     private NotesAdapter mAdapter;
     private List<Note> notesList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private TextView noNotesView;
+    public TextView noNotesView;
     private DatabaseHelper db;
     private TextView test_btn;
 
@@ -38,12 +38,10 @@ public class Fragment2 extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment2 , container, false);
         recyclerView = view.findViewById(R.id.recycler_view2);
-        noNotesView = view.findViewById(R.id.empty_notes_view2);
+         noNotesView = view.findViewById(R.id.empty_notes_view2);
         test_btn = view.findViewById(R.id.test_btn);
 
-        Log.d("skku","fragment2 create");
         db = new DatabaseHelper(getActivity());
-        notesList.clear();
         notesList.addAll(db.getAllHistory());
 
         test_btn.setOnClickListener(new View.OnClickListener() {
@@ -59,12 +57,8 @@ public class Fragment2 extends Fragment {
                 }
                 toggleEmptyNotes();
                 mAdapter.notifyDataSetChanged();
-
-
             }
         });
-
-
 
         mAdapter = new NotesAdapter(getActivity(), notesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
@@ -72,12 +66,24 @@ public class Fragment2 extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
         toggleEmptyNotes();
-
         return view;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.d("skku", "Fragment2 is visible.");
+            notesList.clear();
+            notesList.addAll(db.getAllHistory());
+            toggleEmptyNotes();
 
-    private void toggleEmptyNotes() {
+        }        return;
+
+    }
+
+
+    public void toggleEmptyNotes() {
         Log.d("skku","toggle History column: "+db.getNotesCountH());
         if (db.getNotesCountH() > 0) {
             noNotesView.setVisibility(View.GONE);
