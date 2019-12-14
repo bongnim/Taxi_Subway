@@ -33,7 +33,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Path;
 
-public class Fragment1 extends Fragment {
+public class Fragment1 extends Fragment implements FragmentLifecycle{
     public ODsayService odsayService;
     public Context context;
     public JSONObject jsonObject;
@@ -108,6 +108,7 @@ public class Fragment1 extends Fragment {
             @NonNull LayoutInflater inflater,
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
+        Log.d("skku","fragment1 create");
         View view =  inflater.inflate(R.layout.fragment1, container,false);
         spinner1= (Spinner)view.findViewById(R.id.spinner_start);
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,schools);
@@ -136,11 +137,13 @@ public class Fragment1 extends Fragment {
                 Log.d("taxi and subway","Taxi Time : "+taxiTravelTime + " Subway Time: " + subwayTravelTime);
                 if(Integer.parseInt(subwayTravelTime) < Integer.parseInt(taxiTravelTime)){
                     Intent in = new Intent(getActivity(), ResultActivity.class);
-                    in.putExtra("some", subwayTravelTime);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("some",new Data(taxiTravelTime, subwayTravelTime, 37.582191,127.001915,37.500628,127.036392));
+                    in.putExtras(bundle);
                     startActivity(in);
                 }else{
                     Intent in = new Intent(getActivity(), ResultActivity.class); //ResultActivity를 2개로 나눠서
-                    in.putExtra("some", taxiTravelTime);
+                    in.putExtra("some", new Data(taxiTravelTime, subwayTravelTime, 37.582191,127.001915,37.500628,127.036392));
                     startActivity(in);
                 }
             }
@@ -182,6 +185,16 @@ public class Fragment1 extends Fragment {
             } // end of TryCatch
         } // end of run
     } // end of HttpThread
+    @Override
+    public void onPauseFragment() {
+        Log.d("ss", "onPauseFragment()1");
+        Toast.makeText(getActivity(), "onPauseFragment():" + "ss", Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onResumeFragment() {
+        Log.d("ss", "onResumeFragment()1");
+        Toast.makeText(getActivity(), "onResumeFragment():" + "ss", Toast.LENGTH_SHORT).show();
+    }
 }
 

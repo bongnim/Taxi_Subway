@@ -1,5 +1,6 @@
 package com.example.taxiornotinsubway;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,14 +44,13 @@ public class ResultActivity extends AppCompatActivity {
         polyLine = new TMapPolyLine();
         pathAsync = new PathAsync();
         pathAsync.execute(polyLine);
-
-
-
+;
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
+        Data data = (Data)bundle.getSerializable("some");
+        if(data != null){
             // Log.d("inside", String.valueOf(bundle.getDoubleArray("some")[0]));
-            tMapPointStart = new TMapPoint(bundle.getDoubleArray("some")[0], bundle.getDoubleArray("some")[1]); // 혜화역
-            tMapPointEnd = new TMapPoint( bundle.getDoubleArray("some")[2],bundle.getDoubleArray("some")[3]); // 역삼역
+            tMapPointStart = new TMapPoint(data.getStartX(), data.getEndX()); // 혜화역
+            tMapPointEnd = new TMapPoint( data.getStartY(),data.getEndY()); // 역삼역
         }
     }
     class PathAsync extends AsyncTask<TMapPolyLine, Void, TMapPolyLine> {

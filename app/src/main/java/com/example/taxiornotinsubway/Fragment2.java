@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Fragment2 extends Fragment {
+public class Fragment2 extends Fragment implements FragmentLifecycle{
 
     private NotesAdapter mAdapter;
     private List<Note> notesList = new ArrayList<>();
@@ -84,5 +85,16 @@ public class Fragment2 extends Fragment {
         } else {
             noNotesView.setVisibility(View.VISIBLE);
         }
+    }
+    @Override
+    public void onPauseFragment() {
+        Log.d("ss", "onPauseFragment()2");
+        Toast.makeText(getActivity(), "onPauseFragment():" + "ss", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResumeFragment() {
+        Log.d("ss", "onResumeFragment()2");
+        Toast.makeText(getActivity(), "onResumeFragment():" + "ss", Toast.LENGTH_SHORT).show();
     }
 }

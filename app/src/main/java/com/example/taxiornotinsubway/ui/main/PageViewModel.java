@@ -24,3 +24,4 @@ public class PageViewModel extends ViewModel {
         return mText;
     }
 }
+
