@@ -2,6 +2,7 @@ package com.example.taxiornotinsubway;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 class Data implements Serializable {
     private String taxiTime;
@@ -12,6 +13,8 @@ class Data implements Serializable {
     private double endY;
     private String startName;
     private String endName;
+    private String[] exchangeStations;
+
 
     public Data(String taxiTime, String subwayTime, double startX, double endX, double startY, double endY, String startName, String endName) {
         this.taxiTime = taxiTime;
@@ -23,6 +26,15 @@ class Data implements Serializable {
         this.startName = startName;
         this.endName = endName;
     }
+
+    public Data(String taxiTime, String subwayTime,String startName, String endName, String[] exchangeStations) {
+        this.taxiTime = taxiTime;
+        this.subwayTime = subwayTime;
+        this.startName = startName;
+        this.endName = endName;
+        this.exchangeStations = exchangeStations;
+    }
+
 
     public Data(String taxiTime, String subwayTime, double startX, double endX, double startY, double endY) {
         this.taxiTime = taxiTime;
@@ -63,5 +75,9 @@ class Data implements Serializable {
 
     public String getEndName() {
         return endName;
+    }
+
+    public String[] getExchangeStations() {
+        return exchangeStations;
     }
 }
