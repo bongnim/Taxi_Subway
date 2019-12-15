@@ -30,8 +30,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
     private Context context;
     private List<Note> notesList;
     private DatabaseHelper db;
-    private Fragment2 f2;
-    private Fragment3 f3;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView start;
@@ -91,16 +90,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         holder.ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent in = new Intent(context, ResultActivity.class);
+                String start_id  = note.getStart_id();
+                String end_id  = note.getEnd_id();
                 double start_x =  Double.parseDouble(note.getStart_x());
                 double start_y =  Double.parseDouble(note.getStart_y());
                 double end_x =  Double.parseDouble(note.getEnd_x());
                 double end_y =  Double.parseDouble(note.getEnd_y());
 
-                Toast.makeText(context, "선택 ID search : " + start_x +" / "+ start_y+" / "+ end_x+" / "+ end_y, Toast.LENGTH_LONG).show();
-                double[] latlong ={start_x, start_y, end_x,end_y};
-                in.putExtra("some", latlong);
-                context.startActivity(in);
+                Toast.makeText(context, "ID search - start Id : "+ start_id +"/ end id: " +end_id +"/ start 좌표 " + start_x +" , "+ start_y+" / end 좌표: "+ end_x+" , "+ end_y, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -116,9 +113,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         });
 
     }
-    private void createNote(String start, String end, String start_x, String start_y, String end_x,String end_y) {
+    private void createNote(String start, String end,String start_id, String end_id, String start_x, String start_y, String end_x,String end_y) {
         String type = "history";
-        long id = db.insertNote(type,start,end,start_x,start_y,end_x,end_y);
+        long id = db.insertNote(type,start,end,start_id,end_id,start_x,start_y,end_x,end_y);
         Note n = db.getNote(id);
 
         if (n != null) {

@@ -7,6 +7,8 @@ public class Note {
     public static final String COLUMN_END = "end";
     public static final String COLUMN_TIMESTAMP = "timestamp";
     public static final String COLUMN_TYPE = "type";
+    public static final String COLUMN_START_ID ="start_id";
+    public static final String COLUMN_END_ID ="end_id";
     public static final String COLUMN_START_X ="start_x";
     public static final String COLUMN_START_Y ="start_y";
     public static final String COLUMN_END_X  = "end_x";
@@ -18,6 +20,8 @@ public class Note {
     private String end;
     private String timestamp;
     private String type; // 'history' or 'bookmark'
+    private String start_id;
+    private String end_id;
     private String start_x;
     private String start_y;
     private String end_x;
@@ -30,6 +34,8 @@ public class Note {
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_START + " TEXT,"
                     + COLUMN_END + " TEXT,"
+                    + COLUMN_START_ID + " TEXT,"
+                    + COLUMN_END_ID + " TEXT,"
                     + COLUMN_START_X + " TEXT,"
                     + COLUMN_START_Y + " TEXT,"
                     + COLUMN_END_X + " TEXT,"
@@ -41,11 +47,13 @@ public class Note {
     public Note() {
     }
 
-    public Note(int id, String type, String start, String end, String start_x, String start_y, String end_x, String end_y, String timestamp) {
+    public Note(int id, String type, String start, String end, String start_id, String end_id, String start_x, String start_y, String end_x, String end_y, String timestamp) {
         this.id = id;
         this.type = type;
         this.start = start;
         this.end = end;
+        this.start_id = start_id;
+        this.end_id = end_id;
         this.start_x = start_x;
         this.start_y = start_y;
         this.end_x   = end_x;
@@ -79,6 +87,14 @@ public class Note {
     public String getEnd() {        return end; }
 
     public void setEnd(String end) {        this.end = end; }
+
+    public String getStart_id() {return start_id;    }
+
+    public void setStart_id(String start_id) {        this.start_id = start_id;}
+
+    public String getEnd_id() {        return end_id; }
+
+    public void setEnd_id(String end_id) {        this.end_id = end_id; }
 
     public String getStart_x() {        return start_x; }
 
