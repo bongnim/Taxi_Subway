@@ -37,7 +37,6 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
     public ODsayService odsayService;
     String[] exchangeList;
     public Context context;
-    public JSONObject jsonObject;
     public String subwayTravelTime = "0";
     public String exchangeStation = "";
     public String taxiTravelTime = "0";
@@ -125,6 +124,8 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
         //adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(adapter1);
         PathSeeking();
+        HttpThread httpThread = new HttpThread("https://apis.openapi.sk.com/tmap/routes?version=1&format=json&appKey=0f31e295-9ada-43b5-9292-5133678f2a00&startX=126.9850380932383&startY=37.566567545861645&endX=127.10331814639885&endY=37.403049076341794&totalValue=2");
+        httpThread.start();
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -138,12 +139,12 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
             }
 
         });
+
         button = (Button) view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                HttpThread httpThread = new HttpThread("https://apis.openapi.sk.com/tmap/routes?version=1&format=json&appKey=0f31e295-9ada-43b5-9292-5133678f2a00&startX=126.9850380932383&startY=37.566567545861645&endX=127.10331814639885&endY=37.403049076341794&totalValue=2");
-                httpThread.start();
+
                 Log.d("taxi and subway","Taxi Time : "+taxiTravelTime + " Subway Time: " + subwayTravelTime);
                 //if(Integer.parseInt(subwayTravelTime) < Integer.parseInt(taxiTravelTime)){
                 //임시
