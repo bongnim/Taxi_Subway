@@ -49,7 +49,7 @@ public class Fragment2 extends Fragment implements FragmentLifecycle{
             @Override
             public void onClick(View view) {
 
-                long id = db.insertNote("history","혜화","강남","37.582191", "127.001915", "37.500628","127.036392");
+                long id = db.insertNote("history","혜화","역삼","221","420","37.582191", "127.001915", "37.500628","127.036392");
                 Note n = db.getNote(id);
 
                 if (n != null) {

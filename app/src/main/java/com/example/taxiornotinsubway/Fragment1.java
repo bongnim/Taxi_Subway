@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.taxiornotinsubway.database.DatabaseHelper;
 import com.odsay.odsayandroidsdk.API;
 import com.odsay.odsayandroidsdk.ODsayData;
 import com.odsay.odsayandroidsdk.ODsayService;
@@ -37,8 +36,8 @@ import java.nio.file.Path;
 public class Fragment1 extends Fragment implements FragmentLifecycle{
     public ODsayService odsayService;
     String[] exchangeList;
-    private DatabaseHelper db;
     public Context context;
+    public JSONObject jsonObject;
     public String subwayTravelTime = "0";
     public String exchangeStation = "";
     public String taxiTravelTime = "0";
@@ -64,7 +63,7 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
     //Handler
     private Button button;
     private Spinner spinner1;
-    private static final String[] startLine = new String[]{"호선", "1","2","3","4"};
+    private static final String[] schools = new String[]{"혜화"};
     public static Fragment2 newInstance(String param1, String param2) {
         Fragment2 fragment = new Fragment2();
 
@@ -72,18 +71,12 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
     }
     private Spinner spinner2;
     //지하철 노선 시간 확인
-    private Spinner spinner3;
-    private Spinner spinner4;
-
-
-
-
     public void PathSeeking() {
         odsayService = ODsayService.init(getActivity(), "ohyAzciqIm641X57gUSvS8GNcWZscObNioWn+1HlQHE");
         odsayService.setReadTimeout(5000);
         odsayService.setConnectionTimeout(5000);
         //SID는 DB에서 맞는 지하철역 정보를 받아와 DB에서 ID를 받아올 것
-        odsayService.requestSubwayPath("1000", "221", "420", "1", onResultCallbackListener);
+        odsayService.requestSubwayPath("1000", "420", "221", "1", onResultCallbackListener);
         //stationName에 조회할 View를 넣어야함
     }
 
@@ -126,36 +119,15 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
         Log.d("skku","fragment1 create");
         View view =  inflater.inflate(R.layout.fragment1, container,false);
         spinner1= (Spinner)view.findViewById(R.id.spinner_start);
-        spinner2= (Spinner)view.findViewById(R.id.spinner_start_station);
-        spinner3= (Spinner)view.findViewById(R.id.spinner_destination);
-        spinner4= (Spinner)view.findViewById(R.id.spinner_destination_station);
-        final ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_spinner_item,startLine);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,schools);
         //adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(adapter1);
         PathSeeking();
-        HttpThread httpThread = new HttpThread("https://apis.openapi.sk.com/tmap/routes?version=1&format=json&appKey=0f31e295-9ada-43b5-9292-5133678f2a00&startX=126.9850380932383&startY=37.566567545861645&endX=127.10331814639885&endY=37.403049076341794&totalValue=2");
-        httpThread.start();
-
-        spinner1.setPrompt("출발 호선 선택");
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                if (adapter1.getItem(position)=="호선"){
-                    ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_spinner_item, new String[]{"역이름"});
-                    spinner2.setAdapter(adapter2);
-                }
-
-                String[] startStation = new String[4];
-                startStation[0] = (String)adapter1.getItem(position);
-                startStation[1] = (String)adapter1.getItem(position);
-                startStation[2] = (String)adapter1.getItem(position);
-                startStation[3] = (String)adapter1.getItem(position);
-                Log.d("check",startStation[0]);
-
-                ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_spinner_item, startStation);
-                spinner2.setAdapter(adapter2);
-//                Toast.makeText(getActivity(), Integer.toString(position), Toast.LENGTH_SHORT); //본인이 원하는 작업.
+                Toast.makeText(getActivity(), Integer.toString(position), Toast.LENGTH_SHORT); //본인이 원하는 작업.
             }
 
             @Override
@@ -164,34 +136,16 @@ public class Fragment1 extends Fragment implements FragmentLifecycle{
             }
 
         });
-
-        spinner3= (Spinner)view.findViewById(R.id.spinner_destination);
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,startLine);
-        //adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner3.setAdapter(adapter3);
-        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-
-        });
-
         button = (Button) view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
+                HttpThread httpThread = new HttpThread("https://apis.openapi.sk.com/tmap/routes?version=1&format=json&appKey=0f31e295-9ada-43b5-9292-5133678f2a00&startX=126.9850380932383&startY=37.566567545861645&endX=127.10331814639885&endY=37.403049076341794&totalValue=2");
+                httpThread.start();
                 Log.d("taxi and subway","Taxi Time : "+taxiTravelTime + " Subway Time: " + subwayTravelTime);
                 //if(Integer.parseInt(subwayTravelTime) < Integer.parseInt(taxiTravelTime)){
                 //임시
-                if(true){
+                if(false){
                     Intent in = new Intent(getActivity(), ResultActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("some",new Data(taxiTravelTime, subwayTravelTime, 37.582191,127.001915,37.500628,127.036392));

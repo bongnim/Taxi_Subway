@@ -101,13 +101,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         }
     };
 
-    public void PathSeeking() {
+    public void PathSeeking(String start_id, String end_id) {
 
         odsayService = ODsayService.init(context, "ohyAzciqIm641X57gUSvS8GNcWZscObNioWn+1HlQHE");
         odsayService.setReadTimeout(5000);
         odsayService.setConnectionTimeout(5000);
-        //SID는 DB에서 맞는 지하철역 정보를 받아와 DB에서 ID를 받아올 것
-        odsayService.requestSubwayPath("1000", "221", "420", "1", onResultCallbackListener);
+        // sid, eid 파라미터로 넘김
+        odsayService.requestSubwayPath("1000", start_id, end_id, "1", onResultCallbackListener);
         //stationName에 조회할 View를 넣어야함
     }
 
@@ -151,9 +151,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         holder.start.setText(note.getStart());
         holder.end.setText(note.getEnd());
         holder.timestamp.setText(formatDate(note.getTimestamp()));
-        PathSeeking();
-        HttpThread httpThread = new HttpThread("https://apis.openapi.sk.com/tmap/routes?version=1&format=json&appKey=0f31e295-9ada-43b5-9292-5133678f2a00&startX=126.9850380932383&startY=37.566567545861645&endX=127.10331814639885&endY=37.403049076341794&totalValue=2");
-        httpThread.start();
 
         // 북마크 추가
         holder.ivStar.setOnClickListener(new View.OnClickListener() {
@@ -172,21 +169,30 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
             @Override
             public void onClick(View view) {
                 Log.d("time","Taxi Time : "+taxiTravelTime + " Subway Time: " + subwayTravelTime);
+                String start_id  = note.getStart_id();
+                String end_id  = note.getEnd_id();
+                String start = note.getStart();
+                String end = note.getEnd();
                 double start_x =  Double.parseDouble(note.getStart_x());
                 double start_y =  Double.parseDouble(note.getStart_y());
                 double end_x =  Double.parseDouble(note.getEnd_x());
                 double end_y =  Double.parseDouble(note.getEnd_y());
+
                 //if(Integer.parseInt(subwayTravelTime) < Integer.parseInt(taxiTravelTime)){
+                PathSeeking(start_id,end_id);
+                HttpThread httpThread = new HttpThread("https://apis.openapi.sk.com/tmap/routes?version=1&format=json&appKey=0f31e295-9ada-43b5-9292-5133678f2a00&startX=126.9850380932383&startY=37.566567545861645&endX=127.10331814639885&endY=37.403049076341794&totalValue=2");
+                httpThread.start();
+
                 //임시
                 if(false){
                     Intent i = new Intent(context, ResultActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("some",new Data(taxiTravelTime, subwayTravelTime, 37.582191,127.001915,37.500628,127.036392));
+                    bundle.putSerializable("some",new Data(taxiTravelTime, subwayTravelTime, start_x,end_x,start_y,end_y));
                     i.putExtras(bundle);
                     context.startActivity(i);
                 }else{
                     Intent i = new Intent(context, ResultActivity2.class); //ResultActivity를 2개로 나눠서
-                    i.putExtra("some", new Data(taxiTravelTime, subwayTravelTime, "역삼","혜화", exchangeList));
+                    i.putExtra("some", new Data(taxiTravelTime, subwayTravelTime, start,end, exchangeList));
                     context.startActivity(i);
                 }
                 //Toast.makeText(context, "선택 ID search : " + start_x +" / "+ start_y+" / "+ end_x+" / "+ end_y, Toast.LENGTH_LONG).show();
@@ -208,9 +214,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         });
 
     }
-    private void createNote(String start, String end, String start_x, String start_y, String end_x,String end_y) {
+    private void createNote(String start, String end,String start_id, String end_id, String start_x, String start_y, String end_x,String end_y) {
         String type = "history";
-        long id = db.insertNote(type,start,end,start_x,start_y,end_x,end_y);
+        long id = db.insertNote(type,start,end,start_id,end_id,start_x,start_y,end_x,end_y);
         Note n = db.getNote(id);
 
         if (n != null) {

@@ -11,18 +11,13 @@ import com.example.taxiornotinsubway.database.model.Note;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ravi on 15/03/18.
- */
-
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Name
     private static final String DATABASE_NAME = "notes_db";
-
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -43,12 +38,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertNote(String type, String start, String end, String start_x, String start_y, String end_x, String end_y) {
+    public long insertNote(String type, String start, String end,String start_id, String end_id, String start_x, String start_y, String end_x, String end_y) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Note.COLUMN_TYPE, type);
         values.put(Note.COLUMN_START,start);
         values.put(Note.COLUMN_END,end);
+        values.put(Note.COLUMN_START_ID,start_id);
+        values.put(Note.COLUMN_END_ID,end_id);
         values.put(Note.COLUMN_START_X, start_x);
         values.put(Note.COLUMN_START_Y,start_y);
         values.put(Note.COLUMN_END_X, end_x);
@@ -63,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(Note.TABLE_NAME,
-                new String[]{Note.COLUMN_ID, Note.COLUMN_TYPE,Note.COLUMN_START,Note.COLUMN_END,Note.COLUMN_START_X,Note.COLUMN_START_Y,Note.COLUMN_END_X,Note.COLUMN_END_Y, Note.COLUMN_TIMESTAMP},
+                new String[]{Note.COLUMN_ID, Note.COLUMN_TYPE,Note.COLUMN_START,Note.COLUMN_END,Note.COLUMN_START_ID,Note.COLUMN_END_ID,Note.COLUMN_START_X,Note.COLUMN_START_Y,Note.COLUMN_END_X,Note.COLUMN_END_Y, Note.COLUMN_TIMESTAMP},
                 Note.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
@@ -74,6 +71,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_TYPE)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_START)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_END)),
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_START_ID)),
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_END_ID)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_START_X)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_START_Y)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_END_X)),
@@ -101,6 +100,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 note.setType(cursor.getString(cursor.getColumnIndex(Note.COLUMN_TYPE)));
                 note.setStart(cursor.getString(cursor.getColumnIndex(Note.COLUMN_START)));
                 note.setEnd(cursor.getString(cursor.getColumnIndex(Note.COLUMN_END)));
+                note.setStart_id(cursor.getString(cursor.getColumnIndex(Note.COLUMN_START_ID)));
+                note.setEnd_id(cursor.getString(cursor.getColumnIndex(Note.COLUMN_END_ID)));
                 note.setStart_x(cursor.getString(cursor.getColumnIndex(Note.COLUMN_START_X)));
                 note.setStart_y(cursor.getString(cursor.getColumnIndex(Note.COLUMN_START_Y)));
                 note.setEnd_x(cursor.getString(cursor.getColumnIndex(Note.COLUMN_END_X)));
@@ -131,6 +132,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 note.setType(cursor.getString(cursor.getColumnIndex(Note.COLUMN_TYPE)));
                 note.setStart(cursor.getString(cursor.getColumnIndex(Note.COLUMN_START)));
                 note.setEnd(cursor.getString(cursor.getColumnIndex(Note.COLUMN_END)));
+                note.setStart_id(cursor.getString(cursor.getColumnIndex(Note.COLUMN_START_ID)));
+                note.setEnd_id(cursor.getString(cursor.getColumnIndex(Note.COLUMN_END_ID)));
                 note.setStart_x(cursor.getString(cursor.getColumnIndex(Note.COLUMN_START_X)));
                 note.setStart_y(cursor.getString(cursor.getColumnIndex(Note.COLUMN_START_Y)));
                 note.setEnd_x(cursor.getString(cursor.getColumnIndex(Note.COLUMN_END_X)));
@@ -176,6 +179,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Note.COLUMN_TYPE, note.getType());
         values.put(Note.COLUMN_START,note.getStart());
         values.put(Note.COLUMN_END,note.getEnd());
+        values.put(Note.COLUMN_START_ID,note.getStart_id());
+        values.put(Note.COLUMN_END_ID,note.getEnd_id());
         values.put(Note.COLUMN_START_X,note.getStart_x() );
         values.put(Note.COLUMN_START_Y,note.getStart_y());
         values.put(Note.COLUMN_END_X, note.getEnd_x());
